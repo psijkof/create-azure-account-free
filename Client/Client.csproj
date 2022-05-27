@@ -8,11 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\azure.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\azure.html" />
+    <None Include="wwwroot\azure.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
