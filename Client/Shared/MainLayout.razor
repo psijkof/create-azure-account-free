@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider/>
+<MudThemeProvider Theme="FreePOINTTheme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
@@ -13,7 +13,7 @@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h6">MudBlazor-Wasm</MudText>
+            <MudText Typo="Typo.h6">freePOINT</MudText>
         </MudDrawerHeader>
         <NavMenu />
     </MudDrawer>
@@ -25,10 +25,30 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    bool _drawerOpen = false;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    MudTheme FreePOINTTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = Colors.Grey.Lighten1,
+            Secondary = Colors.Grey.Lighten3,
+            AppbarBackground = Colors.Grey.Lighten5,
+        },
+        PaletteDark = new Palette()
+        {
+            Primary = Colors.Grey.Lighten1
+        }//,
+
+        //LayoutProperties = new LayoutProperties()
+        //{
+        //    DrawerWidthLeft = "260px",
+        //    DrawerWidthRight = "300px"
+        //}
+    };
 }
