@@ -1,0 +1,9 @@
+﻿<MudDivider Class="my-4"></MudDivider>
+<MudAlert Severity="Severity.Normal">
+    <MudLink Href="@LinkUrl">@LinkText</MudLink>
+</MudAlert>
+
+@code {
+    [Parameter] public string LinkUrl { get; set; }
+    [Parameter] public string LinkText { get; set; }
+}
