@@ -1,15 +1,39 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="FreePOINTTheme"/>
-<MudDialogProvider/>
-<MudSnackbarProvider/>
+@using System.Text.Json.Serialization
+@using System.Text.Json
+@using System.Dynamic
+@using BlazorApp.Client.Interop
+@using MudBlazor.Utilities
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@using BlazorApp.Client.Converter
+
+@inject SharedState _sharedState
+@inject IJSRuntime _jsRuntime
+@inject IWebAssemblyHostEnvironment _webHost
+
+<MudThemeProvider Theme="_themeManager.Theme" @bind-IsDarkMode="@_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 <MudLayout>
+    <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
+    <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        @if (_webHost.IsEnvironment("Development"))
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => SaveThemeToFile())" />
+            <InputFile id="fileInput" OnChange="LoadThemeFromFile" hidden accept=".json" />
+            <MudIconButton HtmlTag="label" Icon="@Icons.Material.Filled.CloudUpload" Color="Color.Inherit" Edge="Edge.Start" for="fileInput" />
+        }
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
+        <MudText>@_webHost.Environment</MudText>
+        <MudSpacer />
+
+        <MudIcon Icon="@Icons.Material.Filled.LightMode"></MudIcon>
+        <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" />
+        <MudIcon Icon="@Icons.Material.Filled.DarkMode"></MudIcon>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <MudDrawerHeader>
@@ -25,30 +49,57 @@
 </MudLayout>
 
 @code {
+    private bool _isDarkMode = true;
+
+    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
+    public bool _themeManagerOpen = false;
+
+    void OpenThemeManager(bool value)
+    {
+        _themeManagerOpen = value;
+    }
+
+    void UpdateTheme(ThemeManagerTheme value)
+    {
+        _themeManager = value;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _themeManager.FontFamily = "Montserrat";
+        StateHasChanged();
+    }
+
     bool _drawerOpen = false;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-
-    MudTheme FreePOINTTheme = new MudTheme()
+    async Task SaveThemeToFile()
     {
-        Palette = new Palette()
-        {
-            Primary = Colors.Grey.Lighten1,
-            Secondary = Colors.Grey.Lighten3,
-            AppbarBackground = Colors.Grey.Lighten5,
-        },
-        PaletteDark = new Palette()
-        {
-            Primary = Colors.Grey.Lighten1
-        }//,
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        var json = JsonSerializer.Serialize(_themeManager.Theme, options);
 
-        //LayoutProperties = new LayoutProperties()
-        //{
-        //    DrawerWidthLeft = "260px",
-        //    DrawerWidthRight = "300px"
-        //}
-    };
+        var fileStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
+        var fileName = "_mudBlazorTheme.json";
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await _jsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    async Task LoadThemeFromFile(InputFileChangeEventArgs e)
+    {
+        var json = await new StreamReader(e.File.OpenReadStream(maxAllowedSize: 10485760)).ReadToEndAsync();
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        options.Converters.Add(new MudColorConverter());
+        var uploadedPalette = System.Text.Json.JsonSerializer.Deserialize<MudTheme>(json, options) ?? default;
+
+        _themeManager.Theme.Palette.AppbarBackground = uploadedPalette.Palette.AppbarBackground;
+        //_themeManager.Theme.Palette = uploadedPalette as Palette;
+        //StateHasChanged();
+    }
+
 }

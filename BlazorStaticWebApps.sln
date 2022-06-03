@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIsolated", "ApiIsolated\ApiIsolated.csproj", "{162B3342-33B4-49D4-BFD9-F10C053B2025}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestJson", "TestJson\TestJson.csproj", "{BD8EDD35-A402-4A23-9052-8D05E8F11C52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{162B3342-33B4-49D4-BFD9-F10C053B2025}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{162B3342-33B4-49D4-BFD9-F10C053B2025}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{162B3342-33B4-49D4-BFD9-F10C053B2025}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD8EDD35-A402-4A23-9052-8D05E8F11C52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD8EDD35-A402-4A23-9052-8D05E8F11C52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD8EDD35-A402-4A23-9052-8D05E8F11C52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD8EDD35-A402-4A23-9052-8D05E8F11C52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
