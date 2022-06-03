@@ -1,0 +1,19 @@
+﻿@page "/azurefree"
+@using BlazorApp.Client.Services
+@inject LocalhostService _localhostService
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+    <MudPaper Class="p-8">
+        @((MarkupString)_azureArticle!)
+    </MudPaper>
+</MudContainer>
+@code {
+    private string? _azureArticle;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _azureArticle = await _localhostService.HttpClient.GetStringAsync("/azure.html");
+
+        await base.OnInitializedAsync();
+    }
+}

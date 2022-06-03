@@ -7,10 +7,11 @@
 @using MudBlazor.Utilities
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @using BlazorApp.Client.Converter
-
+@using BlazorApp.Client.Services
 @inject SharedState _sharedState
 @inject IJSRuntime _jsRuntime
 @inject IWebAssemblyHostEnvironment _webHost
+@inject LocalhostService _localhostService
 
 <MudThemeProvider Theme="_themeManager.Theme" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
@@ -65,13 +66,16 @@
         StateHasChanged();
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        _themeManager.FontFamily = "Montserrat";
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        options.Converters.Add(new MudColorConverter());
+        _themeManager.Theme = await _localhostService.HttpClient.GetFromJsonAsync<MudTheme>("_mudBlazorTheme.json", options);
         StateHasChanged();
+        
+        await base.OnInitializedAsync();
     }
-
+    
     bool _drawerOpen = false;
 
     void DrawerToggle()
