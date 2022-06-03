@@ -1,9 +1,9 @@
 ﻿@page "/azurefree"
 @using BlazorApp.Client.Services
 @inject LocalhostService _localhostService
-
-<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
-    <MudPaper Class="p-8">
+<PageTitle>How to enable a free Azure account and discover free services?</PageTitle>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudPaper Class="pa-8">
         @((MarkupString)_azureArticle!)
     </MudPaper>
 </MudContainer>
