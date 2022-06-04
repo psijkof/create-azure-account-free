@@ -1,17 +1,28 @@
 ﻿@page "/counter"
+@inherits FluxorComponent
+
+@using BlazorApp.Client.Features.Counter.Store
+
+@inject IDispatcher Dispatcher
+@inject IState<CounterState> CounterState
 
 <PageTitle>Counter</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText>
 <MudText Class="mb-4">Current count: @currentCount</MudText>
-<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Click me</MudButton>
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Increase</MudButton>
+<MudButton Color="Color.Secondary" Variant="Variant.Filled" @onclick="DecrementCount">Decrease</MudButton>
 
 
 @code {
-    private int currentCount = 0;
+    private int currentCount => CounterState.Value.Counter;
 
     private void IncrementCount()
     {
-        currentCount++;
+        Dispatcher.Dispatch(new CounterIncrementAction());
+    }
+    private void DecrementCount()
+    {
+        Dispatcher.Dispatch(new CounterDecrementAction());
     }
 }

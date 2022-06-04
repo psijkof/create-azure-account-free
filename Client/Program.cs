@@ -22,10 +22,9 @@ builder.Services.AddHttpClient<LocalhostHttpClient>(client =>
 });
 
 builder.Services.AddFluxor(o => o
-        .ScanAssemblies(typeof(Program).Assembly)
-        .UseReduxDevTools());
+    .ScanAssemblies(typeof(Program).Assembly)
+    .UseReduxDevTools());
 
-//builder.Services.AddScoped(sp => new HttpClient { }
 builder.Services.AddScoped<SharedState>();
 builder.Services.AddMudServices();
 
