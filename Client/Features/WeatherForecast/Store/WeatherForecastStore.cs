@@ -13,6 +13,7 @@
 
         public bool IsLoading { get; init; }
         public bool Initialized { get; init; }
+        public DateTime LastLoadCompleted { get; init; }
     }
 
     /// <summary>
@@ -36,7 +37,8 @@
             {
                 Forecasts = action.Forecasts,
                 IsLoading = false,
-                Initialized = true
+                Initialized = true,
+                LastLoadCompleted = DateTime.Now
             };
         }
     }
@@ -54,7 +56,8 @@
             {
                 Initialized = false,
                 IsLoading = false,
-                Forecasts = Array.Empty<WeatherForecast>()
+                Forecasts = Array.Empty<WeatherForecast>(),
+                LastLoadCompleted = DateTime.MinValue
             };
         }
     }
