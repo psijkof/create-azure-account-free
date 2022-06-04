@@ -66,7 +66,7 @@
     {
         private readonly HttpClient? _http;
 
-        public WeatherForecastEffects(AzFunctionService azFunctionService)
+        public WeatherForecastEffects(AzFunctionHttpClient azFunctionService)
         {
             _http = azFunctionService?.HttpClient ?? new HttpClient();
         }

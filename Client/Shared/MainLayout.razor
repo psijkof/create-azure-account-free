@@ -11,7 +11,7 @@
 @inject SharedState _sharedState
 @inject IJSRuntime _jsRuntime
 @inject IWebAssemblyHostEnvironment _webHost
-@inject LocalhostService _localhostService
+@inject LocalhostHttpClient _localhostService
 
 <MudThemeProvider Theme="_themeManager.Theme" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />

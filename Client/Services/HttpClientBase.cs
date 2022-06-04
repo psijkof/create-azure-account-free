@@ -1,6 +1,6 @@
 ﻿namespace BlazorApp.Client.Services
 {
-    public class HttpClientServiceBase
+    public class HttpClientBase
     {
         public HttpClient? HttpClient;
 

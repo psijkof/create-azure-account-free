@@ -36,4 +36,8 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Counter\Store\" />
+  </ItemGroup>
+
 </Project>

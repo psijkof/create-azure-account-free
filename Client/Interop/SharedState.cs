@@ -4,7 +4,6 @@ namespace BlazorApp.Client.Interop
     {
         private bool _isSaving;
         private string? _savedString;
-        private Dictionary<Guid, string>? _renderCache = new();
 
         public event Action? OnChange;
 
