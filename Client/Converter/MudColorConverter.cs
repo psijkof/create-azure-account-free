@@ -9,7 +9,7 @@ namespace BlazorApp.Client.Converter
     {
         public override MudColor? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            MudColor returnColor = null;
+            MudColor? returnColor = null;
             while (reader.TokenType != JsonTokenType.EndObject)
             {
                 if (reader.TokenType == JsonTokenType.String)

@@ -9,7 +9,7 @@
     /// </summary>
     public record WeatherForecastState
     {
-        public WeatherForecast[]? Forecasts { get; init; } = Array.Empty<WeatherForecast>();
+        public WeatherForecast[] Forecasts { get; init; } = Array.Empty<WeatherForecast>();
 
         public bool IsLoading { get; init; }
         public bool Initialized { get; init; }
@@ -64,17 +64,17 @@
     /// </summary>
     public class WeatherForecastEffects
     {
-        private readonly HttpClient _http;
+        private readonly HttpClient? _http;
 
         public WeatherForecastEffects(AzFunctionService azFunctionService)
         {
-            _http = azFunctionService.HttpClient;
+            _http = azFunctionService?.HttpClient ?? new HttpClient();
         }
 
         [EffectMethod(typeof(WeatherLoadForecastAction))]
         public async Task LoadForecasts(IDispatcher dispatcher)
         {
-            var forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+            var forecasts = await _http?.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast")! ?? Array.Empty<WeatherForecast>();
             dispatcher.Dispatch(new WeatherSetForecastsAction(forecasts));
         }
     }
@@ -83,7 +83,7 @@
 
     public record WeatherLoadForecastAction();
     public record WeatherLoadForecastsSuccessAction();
-    public record WeatherSetForecastsAction(WeatherForecast[]? Forecasts);
+    public record WeatherSetForecastsAction(WeatherForecast[] Forecasts);
     //public record WeatherSetStateAction(WeatherForecastState WeatherState);
     //public record WeatherLoadStateAction();
     //public record WeatherLoadStateSuccessAction();

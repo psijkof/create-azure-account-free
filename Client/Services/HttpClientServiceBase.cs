@@ -2,11 +2,11 @@
 {
     public class HttpClientServiceBase
     {
-        public HttpClient HttpClient;
+        public HttpClient? HttpClient;
 
-        public string GetBaseUrl()
+        public string? GetBaseUrl()
         {
-            return HttpClient.BaseAddress.ToString();
+            return HttpClient?.BaseAddress?.ToString();
         }
     }
 }

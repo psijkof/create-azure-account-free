@@ -11,7 +11,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
 <MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
-@if (forecasts.Length == 0)
+@if (_isLoading)
 {
     <MudProgressCircular Color="Color.Default" Indeterminate="true" />
 }
@@ -34,18 +34,27 @@ else
             <MudTablePager PageSizeOptions="new int[]{50, 100}" />
         </PagerContent>
     </MudTable>
+    <MudDivider Class="my-4"/>
+    <MudFab ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Refresh" Label="Reload data" OnClick="LoadData" ></MudFab>
 }
 
 
 @code {
-    private WeatherForecast[]? forecasts => WeatherForecastState.Value.Forecasts;
+    private WeatherForecast[] forecasts => WeatherForecastState.Value.Forecasts ?? Array.Empty<WeatherForecast>();
     private bool _isLoading => WeatherForecastState.Value.IsLoading;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
+        base.OnInitialized();
+
         if (!WeatherForecastState.Value.Initialized)
         {
-            Dispatcher.Dispatch(new WeatherLoadForecastAction());
+            LoadData();
         }
+    }
+
+    private void LoadData()
+    {
+         Dispatcher.Dispatch(new WeatherLoadForecastAction());
     }
 }

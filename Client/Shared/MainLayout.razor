@@ -73,7 +73,7 @@
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
         options.Converters.Add(new MudColorConverter());
-        _themeManager.Theme = await _localhostService.HttpClient.GetFromJsonAsync<MudTheme>("_mudBlazorTheme.json", options);
+        _themeManager.Theme = await _localhostService?.HttpClient?.GetFromJsonAsync<MudTheme>("_mudBlazorTheme.json", options)! ?? new MudTheme();
         StateHasChanged();
 
         await base.OnInitializedAsync();
@@ -102,7 +102,7 @@
         var json = await new StreamReader(e.File.OpenReadStream(maxAllowedSize: 10485760)).ReadToEndAsync();
         var options = new JsonSerializerOptions { WriteIndented = true };
         options.Converters.Add(new MudColorConverter());
-        _themeManager.Theme  = System.Text.Json.JsonSerializer.Deserialize<MudTheme>(json, options) ?? default;
+        _themeManager.Theme = System.Text.Json.JsonSerializer.Deserialize<MudTheme>(json, options) ?? default;
     }
 
 }
