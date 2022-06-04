@@ -1,12 +1,17 @@
 ﻿@page "/fetchdata"
+@inherits FluxorComponent
+
 @using BlazorApp.Shared
-@inject HttpClient Http
+@using BlazorApp.Client.Features.WeatherForecast.Store
+
+@inject IDispatcher Dispatcher
+@inject IState<WeatherForecastState> WeatherForecastState
 
 <PageTitle>Weather forecast</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
 <MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
-@if (forecasts == null)
+@if (forecasts.Length == 0)
 {
     <MudProgressCircular Color="Color.Default" Indeterminate="true" />
 }
@@ -33,17 +38,14 @@ else
 
 
 @code {
-    private WeatherForecast[]? forecasts = Array.Empty<WeatherForecast>();
+    private WeatherForecast[]? forecasts => WeatherForecastState.Value.Forecasts;
+    private bool _isLoading => WeatherForecastState.Value.IsLoading;
 
-       protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        try
+        if (!WeatherForecastState.Value.Initialized)
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast") ?? new WeatherForecast[]{};
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
+            Dispatcher.Dispatch(new WeatherLoadForecastAction());
         }
     }
 }
