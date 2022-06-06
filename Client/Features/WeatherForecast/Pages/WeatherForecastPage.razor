@@ -35,7 +35,7 @@ else
         </PagerContent>*@
     </MudTable>
     <MudDivider Class="my-4"/>
-    <MudFab Class="mb-4" ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Refresh" Label="Reload data" OnClick="LoadData" ></MudFab>
+    <MudFab Class="mb-4" ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Refresh" Label="Actualize forecast" OnClick="LoadData" ></MudFab>
     <MudText>Last updated on @_lastUpdated</MudText>
 }
 
@@ -57,6 +57,6 @@ else
 
     private void LoadData()
     {
-         Dispatcher.Dispatch(new WeatherLoadForecastAction());
+         Dispatcher.Dispatch(new WeatherForecastLoadAction());
     }
 }

@@ -1,0 +1,36 @@
+﻿@page "/azurefree"
+@inherits FluxorComponent
+
+@using BlazorApp.Client.Services
+@using BlazorApp.Client.Features.AzureFree.Store
+
+@inject IDispatcher Dispatcher
+@inject IState<AzureFreeState> State
+
+<PageTitle>How to enable a free Azure account and discover free services?</PageTitle>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudPaper Class="pa-8">
+        @if (_isLoading)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
+        else
+        {
+            @((MarkupString)_azureArticle!)
+        }
+    </MudPaper>
+</MudContainer>
+@code {
+    private string? _azureArticle => State.Value.AzureFreeHtml;
+    private bool _isLoading => State.Value.IsLoading || !State.Value.IsInitialized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!State.Value.IsInitialized)
+        {
+            Dispatcher.Dispatch(new AzureFreeLoadAction());
+        }
+
+        await base.OnInitializedAsync();
+    }
+}

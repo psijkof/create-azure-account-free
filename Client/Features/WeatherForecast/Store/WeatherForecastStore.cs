@@ -21,7 +21,7 @@
     /// </summary>
     public static class WeatherForecastReducers
     {
-        [ReducerMethod(typeof(WeatherLoadForecastAction))]
+        [ReducerMethod(typeof(WeatherForecastLoadAction))]
         public static WeatherForecastState OnLoadForecasts(WeatherForecastState state)
         {
             return state with
@@ -31,7 +31,7 @@
         }
 
         [ReducerMethod]
-        public static WeatherForecastState OnSetForecasts(WeatherForecastState state, WeatherSetForecastsAction action)
+        public static WeatherForecastState OnSetForecasts(WeatherForecastState state, WeatherForecastSetAction action)
         {
             return state with
             {
@@ -74,19 +74,19 @@
             _http = azFunctionService?.HttpClient ?? new HttpClient();
         }
 
-        [EffectMethod(typeof(WeatherLoadForecastAction))]
+        [EffectMethod(typeof(WeatherForecastLoadAction))]
         public async Task LoadForecasts(IDispatcher dispatcher)
         {
             var forecasts = await _http?.GetFromJsonAsync<WeatherForecast[]>("/api/WeatherForecast")! ?? Array.Empty<WeatherForecast>();
-            dispatcher.Dispatch(new WeatherSetForecastsAction(forecasts));
+            dispatcher.Dispatch(new WeatherForecastSetAction(forecasts));
         }
     }
 
     #region WeatherActions
 
-    public record WeatherLoadForecastAction();
-    public record WeatherLoadForecastsSuccessAction();
-    public record WeatherSetForecastsAction(WeatherForecast[] Forecasts);
+    public record WeatherForecastLoadAction();
+    //public record WeatherForecastLoadSuccessAction();
+    public record WeatherForecastSetAction(WeatherForecast[] Forecasts);
     //public record WeatherSetStateAction(WeatherForecastState WeatherState);
     //public record WeatherLoadStateAction();
     //public record WeatherLoadStateSuccessAction();
