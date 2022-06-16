@@ -1,7 +1,6 @@
 global using Fluxor;
 
 using BlazorApp.Client;
-using BlazorApp.Client.Interop;
 using BlazorApp.Client.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -25,7 +24,6 @@ builder.Services.AddFluxor(o => o
     .ScanAssemblies(typeof(Program).Assembly)
     .UseReduxDevTools());
 
-builder.Services.AddScoped<SharedState>();
 builder.Services.AddMudServices();
 
 //var provider = new FileExtensionContentTypeProvider();

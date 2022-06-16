@@ -1,36 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
-@using System.Text.Json.Serialization
-@using System.Text.Json
-@using System.Dynamic
-@using BlazorApp.Client.Interop
-@using MudBlazor.Utilities
+@using BlazorApp.Client.Features.Theme.Store
+@using BlazorApp.Client.Features.Theme.Components
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting
-@using BlazorApp.Client.Converter
-@using BlazorApp.Client.Services
-@inject SharedState _sharedState
-@inject IJSRuntime _jsRuntime
 @inject IWebAssemblyHostEnvironment _webHost
-@inject LocalhostHttpClient _localhostService
+@inject IState<ThemeState> _themeState
 
-<MudThemeProvider Theme="_themeManager.Theme" @bind-IsDarkMode="@_isDarkMode" />
+<MudThemeProvider Theme="@_themeState.Value.MudTheme" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-    @if (_webHost.IsEnvironment("Development"))
-    {
-        <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
-    }
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        @if (_webHost.IsEnvironment("Development"))
-        {
-            <MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => SaveThemeToFile())" />
-            <InputFile id="fileInput" OnChange="LoadThemeFromFile" hidden accept=".json" />
-            <MudIconButton HtmlTag="label" Icon="@Icons.Material.Filled.CloudUpload" Color="Color.Inherit" Edge="Edge.Start" for="fileInput" />
-        }
+            <ThemeStateLoader />
         <MudSpacer />
         <MudText>@_webHost.Environment</MudText>
         <MudSpacer />
@@ -54,55 +37,10 @@
 
 @code {
     private bool _isDarkMode = true;
-
-    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
-    public bool _themeManagerOpen = false;
-
-    void OpenThemeManager(bool value)
-    {
-        _themeManagerOpen = value;
-    }
-
-    void UpdateTheme(ThemeManagerTheme value)
-    {
-        _themeManager = value;
-        StateHasChanged();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        options.Converters.Add(new MudColorConverter());
-        _themeManager.Theme = await _localhostService?.HttpClient?.GetFromJsonAsync<MudTheme>("_mudBlazorTheme.json", options)! ?? new MudTheme();
-        StateHasChanged();
-
-        await base.OnInitializedAsync();
-    }
-
-    bool _drawerOpen = true;
+    private bool _drawerOpen = true;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-    async Task SaveThemeToFile()
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        var json = JsonSerializer.Serialize(_themeManager.Theme, options);
-
-        var fileStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
-        var fileName = "_mudBlazorTheme.json";
-        using var streamRef = new DotNetStreamReference(stream: fileStream);
-
-        await _jsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
-    }
-
-    async Task LoadThemeFromFile(InputFileChangeEventArgs e)
-    {
-        var json = await new StreamReader(e.File.OpenReadStream(maxAllowedSize: 10485760)).ReadToEndAsync();
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        options.Converters.Add(new MudColorConverter());
-        _themeManager.Theme = System.Text.Json.JsonSerializer.Deserialize<MudTheme>(json, options) ?? default;
-    }
-
 }

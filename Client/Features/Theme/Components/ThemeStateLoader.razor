@@ -1,0 +1,42 @@
+﻿@using BlazorApp.Client.Features.Theme.Store
+@using System.Text.Json
+
+@inherits FluxorComponent
+@inject IDispatcher Dispatcher
+@inject IState<ThemeState> _themeState
+@inject IJSRuntime _jsRuntime
+
+<MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => SaveThemeToFile())" />
+<InputFile id="fileInput" OnChange="LoadThemeFromFile" hidden accept=".json" />
+<MudIconButton HtmlTag="label" Icon="@Icons.Material.Filled.CloudUpload" Color="Color.Inherit" Edge="Edge.Start" for="fileInput" />
+
+@code {
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // dispatch loadaction
+        Dispatcher.Dispatch(new ThemeStateLoadAction(null));
+    }
+
+    async Task SaveThemeToFile()
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        var json = JsonSerializer.Serialize(_themeState.Value.MudTheme, options);
+
+        var fileStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
+        var fileName = "_mudBlazorTheme.json"; //default
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await _jsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    async Task LoadThemeFromFile(InputFileChangeEventArgs e)
+    {
+        Dispatcher.Dispatch(new ThemeStateLoadAction(e.File));
+    }
+
+
+}
