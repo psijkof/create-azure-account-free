@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\_mudBlazorTheme.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\azure.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

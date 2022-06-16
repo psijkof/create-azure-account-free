@@ -11,7 +11,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
 <MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
-@if (_isLoading)
+@if (_isLoading || !_isInitialized)
 {
     <MudProgressCircular Color="Color.Default" Indeterminate="true" />
 }
@@ -30,12 +30,12 @@ else
             <MudTd DataLabel="Temp. (F)">@context.TemperatureF</MudTd>
             <MudTd DataLabel="Summary">@context.Summary</MudTd>
         </RowTemplate>
-@*        <PagerContent>
-            <MudTablePager PageSizeOptions="new int[]{50, 100}" />
-        </PagerContent>*@
+        @*        <PagerContent>
+    <MudTablePager PageSizeOptions="new int[]{50, 100}" />
+    </PagerContent>*@
     </MudTable>
-    <MudDivider Class="my-4"/>
-    <MudFab Class="mb-4" ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Refresh" Label="Actualize forecast" OnClick="LoadData" ></MudFab>
+    <MudDivider Class="my-4" />
+    <MudFab Class="mb-4" ButtonType="ButtonType.Button" Icon="@Icons.Material.Filled.Refresh" Label="Actualize forecast" OnClick="LoadData"></MudFab>
     <MudText>Last updated on @_lastUpdated</MudText>
 }
 
@@ -43,8 +43,9 @@ else
 @code {
     private WeatherForecast[] forecasts => WeatherForecastState.Value.Forecasts ?? Array.Empty<WeatherForecast>();
     private bool _isLoading => WeatherForecastState.Value.IsLoading;
+    private bool _isInitialized => WeatherForecastState.Value.Initialized;
     private DateTime _lastUpdated => WeatherForecastState.Value.LastLoadCompleted;
-    
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -57,6 +58,6 @@ else
 
     private void LoadData()
     {
-         Dispatcher.Dispatch(new WeatherForecastLoadAction());
+        Dispatcher.Dispatch(new WeatherForecastLoadAction());
     }
 }
