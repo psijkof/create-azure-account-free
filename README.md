@@ -1,6 +1,13 @@
-# Blazor Starter Application
+# Blazor App with MudBlazor and Fluxor
 
-This template contains an example .NET 6 [Blazor WebAssembly](https://docs.microsoft.com/aspnet/core/blazor/?view=aspnetcore-6.0#blazor-webassembly) client application, a .NET 6 C# [Azure Functions](https://docs.microsoft.com/azure/azure-functions/functions-overview), and a C# class library with shared code.
+[![Azure Static Web Apps CI/CD](https://github.com/psijkof/create-azure-account-free/actions/workflows/azure-static-web-apps-thankful-cliff-00a997403.yml/badge.svg)](https://github.com/psijkof/create-azure-account-free/actions/workflows/azure-static-web-apps-thankful-cliff-00a997403.yml)
+
+Based on template that contains an example .NET 6 [Blazor WebAssembly](https://docs.microsoft.com/aspnet/core/blazor/?view=aspnetcore-6.0#blazor-webassembly) client application, a .NET 6 C# [Azure Functions](https://docs.microsoft.com/azure/azure-functions/functions-overview), and a C# class library with shared code.
+
+Demonstrates:
+- Theme loading (MudBlazor)
+- Fluxor state management (Use Redux DevTools to examine)
+- Runtime Environments via js startup script (in index.html)
 
 ## Getting Started
 
