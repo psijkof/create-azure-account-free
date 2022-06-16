@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BlazorApp.Client.Converter
+namespace BlazorApp.Client.Features.Theme.Converter
 {
     public class MudColorConverter : JsonConverter<MudColor>
     {

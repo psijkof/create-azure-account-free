@@ -1,17 +1,30 @@
 ﻿@using BlazorApp.Client.Features.Theme.Store
 @using System.Text.Json
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 
 @inherits FluxorComponent
 @inject IDispatcher Dispatcher
 @inject IState<ThemeState> _themeState
 @inject IJSRuntime _jsRuntime
+@inject IWebAssemblyHostEnvironment _webHost
 
-<MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => SaveThemeToFile())" />
-<InputFile id="fileInput" OnChange="LoadThemeFromFile" hidden accept=".json" />
-<MudIconButton HtmlTag="label" Icon="@Icons.Material.Filled.CloudUpload" Color="Color.Inherit" Edge="Edge.Start" for="fileInput" />
+@if (_webHost.Environment == "Development")
+{
+    @if (_isReady)
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Save" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => SaveThemeToFile())" />
+        <InputFile id="fileInput" OnChange="LoadThemeFromFile" hidden accept=".json" />
+        <MudIconButton HtmlTag="label" Icon="@Icons.Material.Filled.CloudUpload" Color="Color.Inherit" Edge="Edge.Start" for="fileInput" />
+    }
+    else
+    {
+        <MudProgressCircular Indeterminate="true" />
+    }
+}
+
 
 @code {
-
+    private bool _isReady => _themeState.Value.IsInitialized && !_themeState.Value.IsLoading;
 
     protected override void OnInitialized()
     {
@@ -33,10 +46,9 @@
         await _jsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
 
-    async Task LoadThemeFromFile(InputFileChangeEventArgs e)
+    void LoadThemeFromFile(InputFileChangeEventArgs e)
     {
         Dispatcher.Dispatch(new ThemeStateLoadAction(e.File));
     }
-
 
 }

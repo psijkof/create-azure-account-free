@@ -1,4 +1,4 @@
-﻿using BlazorApp.Client.Converter;
+﻿using BlazorApp.Client.Features.Theme.Converter;
 using BlazorApp.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -91,7 +91,9 @@ namespace BlazorApp.Client.Features.Theme.Store
         /// <param name="dispatcher"></param>
         /// <returns></returns>
         [EffectMethod]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task ThemeStateSetEffect(ThemeStateSetAction action, IDispatcher dispatcher)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             _navigationManager.NavigateTo("/");
         }
